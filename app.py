@@ -18,6 +18,7 @@ import goal_performance
 import goal_performance_comparison
 import goal_performance_ranking
 import generate_csv_files
+import documentacion_kpis
 
 # Configuración de la página
 st.set_page_config(
@@ -29,7 +30,7 @@ st.set_page_config(
 
 # Menú de navegación
 st.sidebar.title("Navegación")
-choice = st.sidebar.radio("Selecciona una página:", ["KPIs Principal", "Goal Performance", "Goal Performance Team Comparison", "Goal Performance Ranking"])
+choice = st.sidebar.radio("Selecciona una página:", ["KPIs Principal", "Goal Performance", "Goal Performance Team Comparison", "Goal Performance Ranking","Documentacion KPIs"])
 
 # Botón para generar archivos CSV
 st.sidebar.markdown("---")
@@ -394,6 +395,9 @@ elif choice == "Goal Performance Team Comparison":
 
 elif choice == "Goal Performance Ranking":
     goal_performance_ranking.app()
+
+elif choice == "Documentacion KPIs":
+    documentacion_kpis.app()
 
 elif df is None or df_matches is None:
     st.error("No se pudieron cargar los datos. Por favor verifica que los archivos existan en la carpeta AUDAX.")

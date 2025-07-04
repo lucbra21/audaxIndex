@@ -28,7 +28,7 @@ def app():
         try:
             # Intentar cargar desde diferentes ubicaciones posibles
             possible_paths = [
-                "AUDAX/df_GoalKPIs_TopValues.csv",
+                "data/df_GoalKPIs_TopValues.csv",
                 "data/goal_kpis_with_top_values.csv",
                 "goal_kpis_with_top_values.csv",
                 "data/goal_kpis.csv",
@@ -64,94 +64,6 @@ def app():
     # -------------------------------------------
     with tab1:
         st.header("🏆 Rankings Interactivos por KPI")
-        
-        # Función para crear ranking (basada en tu función original)
-        # def plot_ranking(ranking_df, selected_kpi):
-        #     """Crear gráfico de ranking según KPI seleccionado"""
-        #     # Crear copia para no modificar el original
-        #     df_plot = ranking_df.copy()
-            
-        #     # Calcular Rank dinámicamente según KPI seleccionado
-        #     df_plot["Rank (avg)"] = df_plot[selected_kpi].rank(ascending=False, method='min').astype(int)
-            
-        #     # Ordenar según nuevo ranking
-        #     df_plot = df_plot.sort_values("Rank (avg)").copy()
-            
-        #     # Redondear valores numéricos a 3 decimales
-        #     numeric_cols = df_plot.select_dtypes(include='number').columns
-        #     df_plot[numeric_cols] = df_plot[numeric_cols].round(3)
-
-        #     # Crear figura
-        #     fig, ax = plt.subplots(figsize=(18, 12))
-        #     ax.set_facecolor("#0E3F5C")
-        #     fig.patch.set_facecolor("#0E3F5C")
-
-        #     # Seleccionar columnas a mostrar (solo las que existen)
-        #     desired_cols = [
-        #         "Rank (avg)", "team_name", "match_week",
-        #         "Goal Performance Index",
-        #         "Goal Envolvement Index",
-        #         "Goal Conversion Index",
-        #         "Possession GoalChance Index",
-        #         "SetPiece Eficcacy Index",
-        #         "GoalSetPiece Performance Index"
-        #     ]
-            
-        #     # Filtrar solo columnas que existen en el DataFrame
-        #     available_cols = [col for col in desired_cols if col in df_plot.columns]
-        #     display_df = df_plot[available_cols]
-
-        #     # Crear tabla
-        #     table = ax.table(
-        #         cellText=display_df.values,
-        #         colLabels=display_df.columns,
-        #         cellLoc='center',
-        #         loc='center',
-        #         colColours=["#1C5D77"] * display_df.shape[1]
-        #     )
-
-        #     # Estilo de la tabla
-        #     table.auto_set_font_size(False)
-        #     table.set_fontsize(28)
-
-        #     for (row, col), cell in table.get_celld().items():
-        #         if row == 0:
-        #             # Encabezado
-        #             cell.set_fontsize(22)
-        #             cell.set_text_props(weight='bold', color='white')
-        #             cell.set_edgecolor("white")
-        #             cell.set_facecolor("#1C5D77")
-        #             cell.set_height(0.08)
-        #         else:
-        #             # Celdas de datos
-        #             col_name = display_df.columns[col]
-        #             value = display_df.iloc[row - 1][col_name]
-
-        #             cell.set_text_props(color='white')
-        #             cell.set_edgecolor("white")
-        #             cell.set_facecolor("#0E3F5C")
-        #             cell.set_height(0.1)
-
-        #             # Resaltar KPI seleccionado (lógica original sin try/except)
-        #             if col_name == selected_kpi:
-        #                 if value >= 7:
-        #                     cell.set_facecolor("darkgreen")
-        #                 elif value >= 6.5:
-        #                     cell.set_facecolor("forestgreen")
-        #                 elif value >= 6:
-        #                     cell.set_facecolor("seagreen")
-        #                 else:
-        #                     cell.set_facecolor("mediumseagreen")
-
-        #         # Ajustar anchos
-        #         col_name = display_df.columns[col]
-        #         if col_name in ["Rank (avg)", "match_week"]:
-        #             cell.set_width(0.18)
-        #         else:
-        #             cell.set_width(0.45)
-
-        #     ax.axis("off")
-        #     return fig
         
         # Mostrar información básica
         col1, col2, col3 = st.columns(3)
@@ -404,6 +316,18 @@ def app():
                 fig1.savefig(radar_path, dpi=300, bbox_inches='tight', facecolor=fig1.get_facecolor())
                 plt.close(fig1)
 
+                # Mostrar métricas numéricas
+                # st.subheader("📋 Resumen Numérico")
+                # team_metrics = df.loc[df["team_name"] == team_name, existing_cols[1:]].iloc[0]
+                # for i, (kpi, value) in enumerate(team_metrics.items()):
+                #     if i % 2 == 0:
+                #         col_a, col_b = st.columns(2)
+                #         col_a.metric(kpi.replace(" Index", "").replace(" Efficiency", ""), f"{value:.2f}")
+                #     else:
+                #         if i < len(team_metrics) - 1:
+                #             next_kpi = list(team_metrics.items())[i][0]
+                #             next_value = list(team_metrics.items())[i][1]
+                #             col_b.metric(next_kpi.replace(" Index", "").replace(" Efficiency", ""), f"{next_value:.2f}")
                 # --------------------- 2. BOXPLOT ---------------------
                 kpi_names = existing_cols[1:]
                 if "TopValues (min)" in df["team_name"].values and "TopValues (max)" in df["team_name"].values:
@@ -514,27 +438,16 @@ def app():
                         if os.path.exists(radar_path):
                             st.image(radar_path)
                         
-                        st.subheader("📊 Comparativa vs TopValues")
-                        if os.path.exists(boxplot_path):
-                            st.image(boxplot_path)
+                        
                     
                     with col2:
                         st.subheader("📈 Índices Avanzados")
                         if os.path.exists(box_path):
                             st.image(box_path)
                         
-                        # Mostrar métricas numéricas
-                        st.subheader("📋 Resumen Numérico")
-                        team_metrics = df.loc[df["team_name"] == team_name, existing_cols[1:]].iloc[0]
-                        for i, (kpi, value) in enumerate(team_metrics.items()):
-                            if i % 2 == 0:
-                                col_a, col_b = st.columns(2)
-                                col_a.metric(kpi.replace(" Index", "").replace(" Efficiency", ""), f"{value:.2f}")
-                            else:
-                                if i < len(team_metrics) - 1:
-                                    next_kpi = list(team_metrics.items())[i][0]
-                                    next_value = list(team_metrics.items())[i][1]
-                                    col_b.metric(next_kpi.replace(" Index", "").replace(" Efficiency", ""), f"{next_value:.2f}")
+                        st.subheader("📊 Comparativa vs TopValues")
+                        if os.path.exists(boxplot_path):
+                            st.image(boxplot_path)
                 else:
                     st.warning("⚠️ No se encontraron valores TopValues para comparación")
                     
