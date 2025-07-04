@@ -1,0 +1,8 @@
+/mi_proyecto/
+│
+├── data/
+│   └── tus_datos.csv
+├── reportes/
+│   └── (aquí se guardarán los radars/tablas por jornada)
+├── main.py
+└── requirements.txt
